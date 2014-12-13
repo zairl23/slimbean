@@ -1,0 +1,115 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "aa9573d91699661bce7db22a7b09261d",
+    "packages": [
+        {
+            "name": "endroid/qrcode",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/endroid/QrCode.git",
+                "reference": "bd1c79c207ceba9432134794d67203ff7f26c7c4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/endroid/QrCode/zipball/bd1c79c207ceba9432134794d67203ff7f26c7c4",
+                "reference": "bd1c79c207ceba9432134794d67203ff7f26c7c4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Endroid": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen van den Enden",
+                    "email": "info@endroid.nl",
+                    "homepage": "http://endroid.nl/"
+                }
+            ],
+            "description": "Endroid QR Code",
+            "homepage": "https://github.com/endroid/QrCode",
+            "keywords": [
+                "code",
+                "endroid",
+                "qr",
+                "qrcode"
+            ],
+            "time": "2014-09-30 22:17:32"
+        },
+        {
+            "name": "slim/slim",
+            "version": "2.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeguy/Slim.git",
+                "reference": "4906b77a07c7bd6ff1a99aea903e940a2d4fa106"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeguy/Slim/zipball/4906b77a07c7bd6ff1a99aea903e940a2d4fa106",
+                "reference": "4906b77a07c7bd6ff1a99aea903e940a2d4fa106",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "ext-mcrypt": "Required for HTTP cookie encryption"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Slim": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Lockhart",
+                    "email": "info@joshlockhart.com",
+                    "homepage": "http://www.joshlockhart.com/"
+                }
+            ],
+            "description": "Slim Framework, a PHP micro framework",
+            "homepage": "http://github.com/codeguy/Slim",
+            "keywords": [
+                "microframework",
+                "rest",
+                "router"
+            ],
+            "time": "2014-04-05 18:33:59"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "endroid/qrcode": 20
+    },
+    "prefer-stable": false,
+    "platform": [],
+    "platform-dev": []
+}
