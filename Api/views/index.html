@@ -20,12 +20,15 @@
 
 	<body>
 		<div id="navbar"></div>
+		<div id="ordersList" class="container"></div>
 		<script src="./Api/node_modules/react/dist/react.js"></script>
 		<script src="./Api/bower_components/react-bootstrap/react-bootstrap.min.js"></script>
 		<script src="./Api/node_modules/react/dist/JSXTransformer.js"></script>
-		<script type="text/jsx" src="./Api/app/navbar.jsx"></script>
+		<script type="text/jsx" src="./Api/app/navbar.js"></script>
+		<script type="text/jsx" src="./Api/app/ordersList.js"></script>
 		<script type="text/jsx">
-			React.render(navbarNey,  document.getElementById('navbar'));
+			React.render(<NavbarNeyChang />,  document.getElementById('navbar'));
+			React.render(<OrdersList />,  document.getElementById('ordersList'));
 		</script>
 	</body>
 </html>

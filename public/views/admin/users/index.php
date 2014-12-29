@@ -94,8 +94,6 @@
                                             <?php echo "管理员"; ?>
                                     <?php elseif($user['type'] == 2) : ?>
                                         <?php echo "入单"; ?>
-                                    <?php elseif($user['type'] == 3) : ?>
-                                        <?php echo "外包"; ?>
                                     <?php else: ?>
                                         <?php foreach ($processes as $process) : ?>
                                             <?php if($user['process_id'] == $process['id']) : ?>
@@ -116,6 +114,8 @@
             </div>
         </div>
     </div>
+
+    <?php include '/../../footer.php';?>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="../publ../jquery.min.js"></script>

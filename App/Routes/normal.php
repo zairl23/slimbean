@@ -24,6 +24,7 @@ $app->post('/normal/postOrder', $authCheckNoraml(), function() use ($app) {
 	$order->name = $app->request->post('name');
 	$order->costumer_name = $app->request->post('costumer_name');
 	$order->order_number = $app->request->post('order_number');
+	$order->is_completed = 1;
 	$order->created_at = time();
 	$order->updated_at = time();
 	$order_id = R::store($order);

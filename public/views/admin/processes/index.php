@@ -107,9 +107,11 @@
         </div>
     </div>
 
+    <?php include '/../../footer.php';?>
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="../publ../jquery.min.js"></script>
+    <script src="../public/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="../publ../bootstrap.min.js"></script>
+    <script src="../public/bootstrap.min.js"></script>
   </body>
 </html>

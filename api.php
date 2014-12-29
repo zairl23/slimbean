@@ -31,6 +31,15 @@ $app->get('/', function() use ($app) {
 	$app->render('index.html');
 })->name('index');
 
+//取得所有的工单运行信息
+$app->group('/api', function() use ($app){
+
+	$app->get('/orders', function() use ($app){
+		$orders = R::getAll("select * from `order` join orderlog on orderlog.order_id = order.id group by order.id");
+		var_dump($orders);
+	});
+});
+
 $app->get('/demo', function() use($app){
 	$app->render('demo.html');
 });

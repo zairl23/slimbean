@@ -1,7 +1,7 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Manage for manager
+| 超级管理后台
 |--------------------------------------------------------------------------
 |
 | Description
@@ -33,6 +33,7 @@
 		$order->name = $app->request->post('name');
 		$order->costumer_name = $app->request->post('costumer_name');
 		$order->order_number = $app->request->post('order_number');
+		$order->is_completed = 1;
 		$order->created_at = time();
 		$order->updated_at = time();
 		$order_id = R::store($order);
@@ -89,23 +90,15 @@
 
 	$app->get('/admin/addUser', $authCheck(), function() use ($app) {
 		$postUrl = $app->urlFor('postUser');
-		$processObj = R::find('process');
-		// covert to array
-		$processes  = array();
-		foreach ($processObj as $process) {
-			array_push($processes, array(
-				'id' => $process->id,
-				'name' => $process->name,
-			));
-		}
+		$processes = array();
+		$fawais = array();
+		$processes = R::getAll('SELECT * FROM process');
+
 		array_push($processes, 
 			array('id' => 'admin', 'name' => '管理员'), 
 			array('id' => 'rudan', 'name' => '入单')
 		);
-		array_push($processes,
-			array('id' => 'waibao', 'name' => '发外')
-		);
-		// var_dump($processes);exit;
+
 		$orderActive = '';
 		$userActive = 'active';
 		$processActive = '';
@@ -123,10 +116,10 @@
 		}elseif($process_id == 'rudan'){
 			$user->process_id = 0;
 			$user->type = 2;
-		}elseif($process_id == 'waibao'){
-			$user->process_id = 0;
-			$user->type = 3;
 		}else{
+			$process = R::load('process', $process_id);
+			if($process->type == 1) $user->type = 3;
+			else $user->type = 0;
 			$user->process_id = $process_id;
 		}
 		R::store($user);
@@ -136,22 +129,15 @@
 	$app->get('/admin/editUser/:id', $authCheck(), function($id) use ($app) {
 			$user = R::load( 'user', $id);
 			$postUrl = $app->urlFor('postEditUser', array('id' => $id));
-			$processObj = R::find('process');
-			// covert to array
-			$processes  = array();
-			foreach ($processObj as $process) {
-				array_push($processes, array(
-					'id' => $process->id,
-					'name' => $process->name,
-				));
-			}
+		
+			$processes = array();
+			$fawais = array();
+			$processes = R::getAll('SELECT * FROM process');
 			array_push($processes, 
 				array('id' => 'admin', 'name' => '管理员'), 
 				array('id' => 'rudan', 'name' => '入单')
 			);
-			array_push($processes,
-				array('id' => 'waibao', 'name' => '外包')
-			);
+
 			$orderActive = '';
 			$userActive = 'active';
 			$processActive = '';
@@ -169,10 +155,10 @@
 		}elseif($process_id == 'rudan'){
 			$user->process_id = 0;
 			$user->type = 2;
-		}elseif($process_id == 'waibao'){
-			$user->process_id = 0;
-			$user->type = 3;
 		}else{
+			$process = R::load('process', $process_id);
+			if($process->type == 1) $user->type = 3;
+			else $user->type = 0;
 			$user->process_id = $process_id;
 		}
 		R::store($user);
@@ -186,7 +172,7 @@
 	});
 
 	$app->get('/admin/processes',$authCheck(), function() use ($app) {
-		$processes = R::find('process');
+		$processes = R::getAll('SELECT * FROM process WHERE `type`=0');
 		$orderActive = '';
 		$userActive = '';
 		$processActive = 'active';
@@ -205,6 +191,12 @@
 	$app->post('/admin/postProcess', $authCheck(), function() use ($app) {
 		$process = R::dispense('process');
 		$process->name = $app->request->post('name');
+		$pid = R::store($process);
+		unset($process);
+		$process = R::dispense('process');
+		$process->name = $app->request->post('name') . '发外';
+		$process->pid = $pid;
+		$process->type = 1;
 		R::store($process);
 		$app->redirect($app->urlFor('processesIndex'));
 	})->name('postProcess');
@@ -222,6 +214,9 @@
 		$process = R::load( 'process', $id);
 		$process->name = $app->request->post('name');
 		R::store($process);
+		$process_fawai = R::findOne('process', ' pid = ?', array($id));
+		$process_fawai->name = $app->request->post('name') . '发外';
+		R::store($process_fawai);
 		$app->redirect($app->urlFor('processesIndex'));
 	})->name('postEditProcess');
 
@@ -230,3 +225,4 @@
 		R::trash($process);
 		$app->redirect($app->urlFor('processesIndex'));
 	});
+
