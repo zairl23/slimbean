@@ -121,7 +121,7 @@
 		</div>
 	</div>
 
-	<?php include '/../footer.php';?>
+	<?php include __DIR__.'/../footer.php';?>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="../../public/js/jquery.min.js"></script>

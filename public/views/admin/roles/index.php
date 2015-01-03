@@ -57,39 +57,31 @@
             </div>
 
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                <h1 class="page-header">员工列表</h1>
-                  <a title="增加员工" href="./addUser"><span class="glyphicon glyphicon-plus"></span></a>
+                <h1 class="page-header">岗位列表</h1>
+                <a title="增加岗位" href="./addRole"><span class="glyphicon glyphicon-plus"></span></a>
                 <!-- <h2 class="sub-header">Section title</h2> -->
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>姓名</th>
-                                <th>岗位</th>
+                                <th>ID</th>
+                                <th>名称</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($users as $user) : ?>
-                            <tr>
-                                <td><?php echo $user['name']; ?></td>
-                                <td>
-                                    <?php if($user['type'] == 1) : ?>
-                                            <?php echo "管理员"; ?>
-                                    <?php elseif($user['type'] == 2) : ?>
-                                        <?php echo "入单"; ?>
-                                    <?php else: ?>
-                                        <?php foreach ($processes as $process) : ?>
-                                            <?php if($user['process_id'] == $process['id']) : ?>
-                                                <?php echo $process['name'];?>
-                                            <?php endif ?>
-                                        <?php endforeach; ?>
-                                    <?php endif;?>
-                               </td>
-                               <td>
-                                    <a id="edit" href=<?php echo "./editUser/" . $user['id']; ?> name="edit" class="btn btn-success">编辑</a>
-                                    <a id="deleteUser" onClick="if(confirm('您确定删除此条消息么?')) {window.location='./deleteUser/'+ <?php echo $user['id']; ?>;} else {return false;}" name="删除" class="btn btn-danger">删除</a>
-                               </td>
-                            </tr>
+                            <?php foreach ($roles as $role) : ?>
+                                <tr>
+                                    <td>
+                                        <?php echo $role['id'];?>
+                                    </td>
+                                    <td>
+                                        <?php echo $role['name'];?>
+                                    </td>
+                                    <td>
+                                        <a id="edit" href=<?php echo "./editRole/" . $role['id']; ?> name="edit" class="btn btn-success">编辑</a>
+                                    <a id="deleteUser" onClick="if(confirm('您确定删除此条消息么?')) {window.location='./deleteRole/'+ <?php echo $role['id']; ?>;} else {return false;}" name="删除" class="btn btn-danger">删除</a>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -101,8 +93,8 @@
     <?php include __DIR__.'/../../footer.php';?>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="../publ../jquery.min.js"></script>
+    <script src="../public/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="../publ../bootstrap.min.js"></script>
+    <script src="../public/js/bootstrap.min.js"></script>
   </body>
 </html>

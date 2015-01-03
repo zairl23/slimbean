@@ -53,7 +53,7 @@
 	<div class="container-fluid">
 		<!-- <div class="row"> -->
 			<div class="col-sm-3 col-md-2 sidebar">
-			   <?php include __DIR__ . '/../../sidebar.php';?>
+			   <?php include __DIR__ . '/../../sidebar.php' ;?>
 			</div>
 
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -62,30 +62,13 @@
 				<fieldset>
 
 				<!-- Form Name -->
-				<legend>新建订单</legend>
+				<legend>新建岗位</legend>
 
 				<!-- Text input-->
 				<div class="control-group">
-				  <label class="control-label" for="order_number">工单号</label>
+				  <label class="control-label" for="name">岗位名称</label>
 				  <div class="controls">
-					<input id="order_number" name="order_number" type="text" placeholder="工单单号" class="input-xxlarge" required="">
-				  </div>
-				</div>
-
-				<!-- Text input-->
-				<div class="control-group">
-				  <label class="control-label" for="name">产品名称</label>
-				  <div class="controls">
-					<input id="name" name="name" type="text" placeholder="产品名称" class="input-xxlarge" required="">
-
-				  </div>
-				</div>
-
-				<!-- Text input-->
-				<div class="control-group">
-				  <label class="control-label" for="costumer">客户名称</label>
-				  <div class="controls">
-					<input id="costumer" name="costumer_name" type="text" placeholder="客户名称" class="input-xxlarge" required="">
+					<input id="name" name="name" type="text" placeholder="岗位名称" class="input-xxlarge" required="">
 
 				  </div>
 				</div>

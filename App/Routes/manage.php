@@ -10,22 +10,23 @@
 */
 // $app->group('/admin', function () use ($app) {
 	// 后台首页
-	$app->get('/admin', $authCheck(), function() use ($app) {
+#=======================================================================
+# 订单管理接口 --Order--订单
+# @author neychang
+# @touch  2015年1月3日13:19:04
+#=======================================================================
+	$app->get('/admin', $authCheck(), function() use ($app, $menuShow) {
 		$orders = R::find('order');
 		// $orderLog = R::findOne('orderlog', 'ORDER BY created_at DESC LIMIT 1');
 		$processes = R::find('process');
-		$orderActive = 'active';
-		$userActive = '';
-		$processActive = '';
-		$app->render('/admin/index.php', compact('orders','processes','orderActive', 'userActive', 'processActive'));
+		$menus = $menuShow('order');
+		$app->render('/admin/index.php', compact('orders','processes','menus'));
 	})->name('adminIndex');
 
-	$app->get('/admin/addOrder', $authCheck(), function() use ($app) {
+	$app->get('/admin/addOrder', $authCheck(), function() use ($app, $menuShow) {
 		$postUrl = $app->urlFor('postAddOrder');
-		$orderActive = 'active';
-		$userActive = '';
-		$processActive = '';
-		$app->render('/admin/orders/add.php', compact('postUrl', 'orderActive', 'userActive', 'processActive'));
+		$menus = $menuShow('order');
+		$app->render('/admin/orders/add.php', compact('postUrl', 'menus'));
 	})->name('addOrder');
 
 	$app->post('/admin/postOrder', $authCheck(), function() use ($app) {
@@ -43,14 +44,12 @@
 		$app->redirect($app->urlFor('adminIndex'));
 	})->name('postAddOrder');
 
-	$app->get('/admin/editOrder/:id', $authCheck(), function($id) use ($app) {
+	$app->get('/admin/editOrder/:id', $authCheck(), function($id) use ($app, $menuShow) {
 		$order = R::load( 'order', $id);
 		$postUrl = $app->urlFor('postEditOrder', array('id' => $id));
-		$orderActive = 'active';
-		$userActive = '';
-		$processActive = '';
+		$menus = $menuShow('order');
 		$adminUrl = $app->urlFor('adminIndex');
-		$app->render('/admin/orders/edit.php', compact('order', 'postUrl', 'orderActive', 'userActive', 'processActive','adminUrl'));
+		$app->render('/admin/orders/edit.php', compact('order', 'postUrl', 'menus'));
 	})->name('editOrder');
 
 	$app->post('/admin/postEditOrder/:id', $authCheck(), function($id) use ($app) {
@@ -79,16 +78,19 @@
 		$qrCode->render();
 	});
 
-	$app->get('/admin/users',$authCheck(), function() use ($app) {
+#=======================================================================
+# 员工管理接口 --User--员工
+# @author neychang
+# @touch  2015年1月3日13:10:12
+#=======================================================================
+	$app->get('/admin/users',$authCheck(), function() use ($app, $menuShow) {
 		$users = R::find('user');
 		$processes = R::find('process');
-		$orderActive = '';
-		$userActive = 'active';
-		$processActive = '';
-		$app->render('/admin/users/index.php', compact('users','processes','orderActive','userActive','processActive'));
+		$menus = $menuShow('user');
+		$app->render('/admin/users/index.php', compact('users','processes','menus'));
 	})->name('usersIndex');
 
-	$app->get('/admin/addUser', $authCheck(), function() use ($app) {
+	$app->get('/admin/addUser', $authCheck(), function() use ($app, $menuShow) {
 		$postUrl = $app->urlFor('postUser');
 		$processes = array();
 		$fawais = array();
@@ -99,10 +101,8 @@
 			array('id' => 'rudan', 'name' => '入单')
 		);
 
-		$orderActive = '';
-		$userActive = 'active';
-		$processActive = '';
-		$app->render('/admin/users/add.php', compact('postUrl','processes','orderActive', 'userActive', 'processActive'));
+		$menus = $menuShow('user');
+		$app->render('/admin/users/add.php', compact('postUrl','processes','menus'));
 	})->name('addUser');
 
 	$app->post('/admin/postUser',$authCheck(), function() use ($app) {
@@ -126,7 +126,7 @@
 		$app->redirect($app->urlFor('usersIndex'));
 	})->name('postUser');
 
-	$app->get('/admin/editUser/:id', $authCheck(), function($id) use ($app) {
+	$app->get('/admin/editUser/:id', $authCheck(), function($id) use ($app, $menuShow) {
 			$user = R::load( 'user', $id);
 			$postUrl = $app->urlFor('postEditUser', array('id' => $id));
 		
@@ -138,10 +138,8 @@
 				array('id' => 'rudan', 'name' => '入单')
 			);
 
-			$orderActive = '';
-			$userActive = 'active';
-			$processActive = '';
-			$app->render('/admin/users/edit.php', compact('user', 'postUrl', 'processes','orderActive','userActive','processActive'));
+			$menus = $menuShow('user');
+			$app->render('/admin/users/edit.php', compact('user', 'postUrl', 'processes','menus'));
 		})->name('editUser');
 
 	$app->post('/admin/postEditUser/:id',$authCheck(), function($id) use ($app) {
@@ -171,21 +169,22 @@
 		$app->redirect($app->urlFor('usersIndex'));
 	});
 
-	$app->get('/admin/processes',$authCheck(), function() use ($app) {
+#=======================================================================
+# 后台管理接口--Process--工序
+# @author neychang
+# @touch  2015年1月3日10:52:41
+#=======================================================================
+	$app->get('/admin/processes',$authCheck(), function() use ($app, $menuShow) {
 		$processes = R::getAll('SELECT * FROM process WHERE `type`=0');
-		$orderActive = '';
-		$userActive = '';
-		$processActive = 'active';
-		$app->render('/admin/processes/index.php', compact('processes','orderActive', 'userActive','processActive'));
+		$menus = $menuShow('process');
+		$app->render('/admin/processes/index.php', compact('processes', 'menus'));
 	})->name('processesIndex');
 
-	$app->get('/admin/addProcess', $authCheck(), function() use ($app) {
+	$app->get('/admin/addProcess', $authCheck(), function() use ($app, $menuShow) {
 		$postUrl = $app->urlFor('postProcess');
 		$processes = R::find('process');
-		$orderActive = '';
-		$userActive = '';
-		$processActive = 'active';
-		$app->render('/admin/processes/add.php', compact('postUrl','processes','orderActive', 'userActive','processActive'));
+		$menus = $menuShow('process');
+		$app->render('/admin/processes/add.php', compact('postUrl','processes','menus'));
 	})->name('addProcess');
 
 	$app->post('/admin/postProcess', $authCheck(), function() use ($app) {
@@ -201,14 +200,12 @@
 		$app->redirect($app->urlFor('processesIndex'));
 	})->name('postProcess');
 
-	$app->get('/admin/editProcess/:id',$authCheck(), function($id) use ($app) {
-			$process = R::load( 'process', $id);
-			$postUrl = $app->urlFor('postEditProcess', array('id' => $id));
-			$orderActive = '';
-			$userActive = '';
-			$processActive = 'active';
-			$app->render('/admin/processes/edit.php', compact('process', 'postUrl', 'orderActive','userActive', 'processActive'));
-		})->name('editProcess');
+	$app->get('/admin/editProcess/:id',$authCheck(), function($id) use ($app, $menuShow) {
+		$process = R::load( 'process', $id);
+		$postUrl = $app->urlFor('postEditProcess', array('id' => $id));
+		$menus = $menuShow('process');
+		$app->render('/admin/processes/edit.php', compact('process', 'postUrl', 'menus'));
+	})->name('editProcess');
 
 	$app->post('/admin/postEditProcess/:id', $authCheck(), function($id) use ($app) {
 		$process = R::load( 'process', $id);
@@ -226,3 +223,46 @@
 		$app->redirect($app->urlFor('processesIndex'));
 	});
 
+#=======================================================================
+# 后台管理接口--Role--岗位
+# @author neychang
+# @touch  2015年1月3日10:52:41
+#=======================================================================
+	$app->get('/admin/roles',$authCheck(), function() use ($app, $menuShow) {
+		$roles = R::getAll('SELECT * FROM role');
+		$menus = $menuShow('role');
+		$app->render('/admin/roles/index.php', compact('roles','menus'));
+	})->name('rolesIndex');
+	$app->get('/admin/addRole', $authCheck(), function() use ($app, $menuShow) {
+		$postUrl = $app->urlFor('postRole');
+		$menus = $menuShow('role');
+		$app->render('/admin/roles/add.php', compact('postUrl','menus'));
+	})->name('addRole');
+
+	$app->post('/admin/postRole', $authCheck(), function() use ($app) {
+		$role = R::dispense('role');
+		$role->name = $app->request->post('name');
+		$rid = R::store($role);
+		$app->redirect($app->urlFor('rolesIndex'));
+	})->name('postRole');
+
+	$app->get('/admin/editRole/:id',$authCheck(), function($id) use ($app, $menuShow) {
+		$role = R::load( 'role', $id);
+		$postUrl = $app->urlFor('postEditRole', array('id' => $id));
+		$menus = $menuShow('role');
+		$app->render('/admin/roles/edit.php', compact('role', 'postUrl','menus'));
+	})->name('editRole');
+
+	$app->post('/admin/postEditRole/:id', $authCheck(), function($id) use ($app) {
+		$role = R::load('role', $id);
+		$role->name = $app->request->post('name');
+		R::store($role);
+		$app->redirect($app->urlFor('rolesIndex'));
+	})->name('postEditRole');
+
+
+	$app->get('/admin/deleteRole/:id', $authCheck(), function ($id) use ($app) {
+		$role = R::load( 'role', $id);
+		R::trash($role);
+		$app->redirect($app->urlFor('rolesIndex'));
+	});

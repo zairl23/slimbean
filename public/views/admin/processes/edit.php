@@ -53,24 +53,7 @@
 	<div class="container-fluid">
 		<!-- <div class="row"> -->
 			<div class="col-sm-3 col-md-2 sidebar">
-				<ul class="nav nav-sidebar">
-					<li class="<?php echo $orderActive;?>"><a href="../../admin">订单列表</a></li>
-					<!-- <li><a href="#">Reports</a></li>
-					<li><a href="#">Analytics</a></li>
-					<li><a href="#">Export</a></li> -->
-				</ul>
-				<ul class="nav nav-sidebar">
-					<li class="<?php echo $userActive;?>"><a href="../../admin/users">员工列表</a></li>
-					<!-- <li><a href="">Nav item again</a></li>
-					<li><a href="">One more nav</a></li>
-					<li><a href="">Another nav item</a></li>
-					<li><a href="">More navigation</a></li> -->
-				</ul>
-				<ul class="nav nav-sidebar">
-					<li class="<?php echo $processActive;?>"><a href="../../admin/processes">工序列表</a></li>
-				   <!--  <li><a href="">One more nav</a></li>
-					<li><a href="">Another nav item</a></li> -->
-				</ul>
+				<?php include __DIR__ . '/../../sidebar.php' ?>
 			</div>
 
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -105,7 +88,7 @@
 		</div>
 	</div>
 
-	<?php include '/../../footer.php';?>
+	<?php include __DIR__.'/../../footer.php';?>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="../publ../jquery.min.js"></script>

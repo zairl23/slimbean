@@ -10,6 +10,20 @@
 */
 
 /**
+ *取得当前工序名
+ *
+ * @param  obj $order
+ * @author neychang
+ * @return string
+ * @touch  2014年12月30日11:43:06
+ */
+$nowProccess = function($order){
+	//取得类型ID
+	return R::load('process', $order->status)->name;
+};
+
+
+/**
  *取得下一道工序的ID
  *
  * @param  obj $order
@@ -34,9 +48,9 @@ $nextProcessId = function($order, $user_type){
 	}
 };
 
-$app->get('/tete', function() use($app, $nextProcessId){
+$app->get('/tete', function() use($app, $nowProccess){
 	$order = R::load('order', 2);
-	var_dump($nextProcessId($order, $_SESSION['type']));
+	var_dump($nowProccess($order));
 });
 
 /**
@@ -62,9 +76,11 @@ $creatQrcode = function($id, $app){
 	}	
 };
 
-$app->get('/special/showOrder/:id', $loginCheck(), function ($id) use ($app, $nextProcessId){
+$app->get('/special/showOrder/:id', $loginCheck(), function ($id) use ($app, $nextProcessId, $nowProccess){
 	$process_id = $_SESSION['process_id'];
 	$order    = R::load('order', $id);
+	$nowProccess = $nowProccess($order); 
+	// var_dump($nowProccess);exit;
 	if(!$order->id) exit;
 	$orderLog = array();
 	if($_SESSION['type'] == 0){
@@ -110,7 +126,7 @@ $app->get('/special/showOrder/:id', $loginCheck(), function ($id) use ($app, $ne
 		$word = '开始';
 	}
 	// $orderLog = R::find('orderLogs', 'order_id = :order_id', array(':order_id' => $id));
-	$app->render('/special/showOrder.php', compact('order','orderLogs', 'getUrl', 'word'));
+	$app->render('/special/showOrder.php', compact('order','orderLogs', 'getUrl', 'word', 'nowProccess'));
 })->name('showOrder');
 
 $app->get('/special/updateOrder/:id', $loginCheck(),function($id) use ($app){
