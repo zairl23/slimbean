@@ -82,12 +82,12 @@
 
 				<!-- Text input-->
 				<div class="control-group">
-				  <label class="control-label" for="process_id">岗位</label>
+				  <label class="control-label" for="role_id">岗位</label>
 				  <div class="controls">
-					<select id="selectbasic" name="process_id" class="form-control">
+					<select id="selectbasic" name="role_id" class="form-control">
 						<option value="0">请选择</option>
-						<?php foreach ($processes as $process) : ?>
-							<?php echo "<option value=". $process['id'] . ">" . $process['name'] . "</option>";?>
+						<?php foreach ($roles as $role) : ?>
+							<?php echo "<option value=". $role['id'] . ">" . $role['name'] . "</option>";?>
 						<?php endforeach; ?>
 						<!-- <option value="">Option one</option>
 						<option value="2">Option two</option> -->

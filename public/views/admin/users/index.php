@@ -65,6 +65,7 @@
                         <thead>
                             <tr>
                                 <th>姓名</th>
+                                <th>工序(修改过渡显示)</th>
                                 <th>岗位</th>
                             </tr>
                         </thead>
@@ -84,6 +85,13 @@
                                             <?php endif ?>
                                         <?php endforeach; ?>
                                     <?php endif;?>
+                               </td>
+                               <td>
+                                   <?php foreach ($roles as $role) : ?>
+                                       <?php if($user['role_id'] == $role['id']) : ?>
+                                           <?php echo $role['name'];?>
+                                       <?php endif ?>
+                                   <?php endforeach; ?>
                                </td>
                                <td>
                                     <a id="edit" href=<?php echo "./editUser/" . $user['id']; ?> name="edit" class="btn btn-success">编辑</a>

@@ -141,6 +141,9 @@
 				   <td>
 					 <a id="scanOrder" href=<?php echo "./special/showQrcode/" .  $order['id'];?> class="btn btn-primary">扫描</a>
 				   </td>
+				    <td>
+				   	 <a id="showOrder" href=<?php echo "./show/" .  $order['id'];?> class="btn btn-primary">进度</a>
+				    </td>
 			   </tr>
 			   <?php endforeach; ?>
 			</tbody>

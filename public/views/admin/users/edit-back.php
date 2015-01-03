@@ -83,21 +83,27 @@
 
 				<!-- Text input-->
 				<div class="control-group">
-				  <label class="control-label" for="role_id">岗位</label>
+				  <label class="control-label" for="process_id">岗位</label>
 				  <div class="controls">
-					<select id="selectbasic" name="role_id" class="form-control">
+					<select id="selectbasic" name="process_id" class="form-control">
 						<option value="0">请选择</option>
-						<?php foreach ($roles as $role) : ?>
-							<?php if($role['id'] == $user['role_id']) : ?>
-							  <?php echo "<option selected='selected' value=". $role['id'] . ">" . $role['name'] . "</option>";?>
-							<?php else :?>
-								 <?php echo "<option value=". $role['id'] . ">" . $role['name'] . "</option>";?>
+						<?php foreach ($processes as $process) : ?>
+							<?php if($process['id'] == $user['process_id']) : ?>
+							  <?php echo "<option selected='selected' value=". $process['id'] . ">" . $process['name'] . "</option>";?>
+							  <?php elseif($process['id'] == 'admin' && $user['type'] == 1) : ?>
+								<?php echo "<option selected='selected' value=". $process['id'] . ">" . $process['name'] . "</option>";?>
+							  <?php elseif($process['id'] == 'rudan' && $user['type'] == 2) : ?>
+								<?php echo "<option selected='selected' value=". $process['id'] . ">" . $process['name'] . "</option>";?>
+							  <?php elseif($process['id'] == 'waibao' && $user['type'] == 3) : ?>
+								<?php echo "<option selected='selected' value=". $process['id'] . ">" . $process['name'] . "</option>";?>
+							<?php else : ?>
+								 <?php echo "<option value=". $process['id'] . ">" . $process['name'] . "</option>";?>
 							<?php endif;?>
 						<?php endforeach; ?>
 						<!-- <option value="">Option one</option>
 						<option value="2">Option two</option> -->
 					</select>
-					<!-- <input id="role_id" name="role_id" type="text" placeholder="岗位" class="input-xxlarge" required=""> -->
+					<!-- <input id="process_id" name="process_id" type="text" placeholder="岗位" class="input-xxlarge" required=""> -->
 
 				  </div>
 				</div>

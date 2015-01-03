@@ -86,42 +86,51 @@
 	$app->get('/admin/users',$authCheck(), function() use ($app, $menuShow) {
 		$users = R::find('user');
 		$processes = R::find('process');
+		$roles = R::find('role');
 		$menus = $menuShow('user');
-		$app->render('/admin/users/index.php', compact('users','processes','menus'));
+		// not show admin
+		foreach ($users as $id => $user) {
+			if($user['type'] == 1){
+				unset($users[$id]);
+			}
+		}
+
+		$app->render('/admin/users/index.php', compact('users','roles','processes','menus'));
 	})->name('usersIndex');
 
 	$app->get('/admin/addUser', $authCheck(), function() use ($app, $menuShow) {
 		$postUrl = $app->urlFor('postUser');
-		$processes = array();
-		$fawais = array();
-		$processes = R::getAll('SELECT * FROM process');
+		// $processes = array();
+		// $fawais = array();
+		// $processes = R::getAll('SELECT * FROM process');
 
-		array_push($processes, 
-			array('id' => 'admin', 'name' => '管理员'), 
-			array('id' => 'rudan', 'name' => '入单')
-		);
-
+		// array_push($processes, 
+		// 	array('id' => 'admin', 'name' => '管理员'), 
+		// 	array('id' => 'rudan', 'name' => '入单')
+		// );
+		$roles = R::getAll('SELECT * FROM role');
 		$menus = $menuShow('user');
-		$app->render('/admin/users/add.php', compact('postUrl','processes','menus'));
+		$app->render('/admin/users/add.php', compact('postUrl','roles','menus'));
 	})->name('addUser');
 
 	$app->post('/admin/postUser',$authCheck(), function() use ($app) {
 		$user = R::dispense('user');
 		$user->name = $app->request->post('name');
 		$user->password = $app->request->post('password');
-		$process_id = $app->request->post('process_id');
-		if($process_id == 'admin'){
-			$user->process_id = 0;
-			$user->type = 1;
-		}elseif($process_id == 'rudan'){
-			$user->process_id = 0;
-			$user->type = 2;
-		}else{
-			$process = R::load('process', $process_id);
-			if($process->type == 1) $user->type = 3;
-			else $user->type = 0;
-			$user->process_id = $process_id;
-		}
+		// $process_id = $app->request->post('process_id');
+		// if($process_id == 'admin'){
+		// 	$user->process_id = 0;
+		// 	$user->type = 1;
+		// }elseif($process_id == 'rudan'){
+		// 	$user->process_id = 0;
+		// 	$user->type = 2;
+		// }else{
+		// 	$process = R::load('process', $process_id);
+		// 	if($process->type == 1) $user->type = 3;
+		// 	else $user->type = 0;
+		// 	$user->process_id = $process_id;
+		// }
+		$user->role_id = $app->request->post('role_id');
 		R::store($user);
 		$app->redirect($app->urlFor('usersIndex'));
 	})->name('postUser');
@@ -129,36 +138,37 @@
 	$app->get('/admin/editUser/:id', $authCheck(), function($id) use ($app, $menuShow) {
 			$user = R::load( 'user', $id);
 			$postUrl = $app->urlFor('postEditUser', array('id' => $id));
-		
-			$processes = array();
-			$fawais = array();
-			$processes = R::getAll('SELECT * FROM process');
-			array_push($processes, 
-				array('id' => 'admin', 'name' => '管理员'), 
-				array('id' => 'rudan', 'name' => '入单')
-			);
+			$roles = R::getAll('SELECT * FROM role');
+			// $processes = array();
+			// $fawais = array();
+			// $processes = R::getAll('SELECT * FROM process');
+			// array_push($processes, 
+			// 	array('id' => 'admin', 'name' => '管理员'), 
+			// 	array('id' => 'rudan', 'name' => '入单')
+			// );
 
 			$menus = $menuShow('user');
-			$app->render('/admin/users/edit.php', compact('user', 'postUrl', 'processes','menus'));
+			$app->render('/admin/users/edit.php', compact('user', 'postUrl', 'roles','menus'));
 		})->name('editUser');
 
 	$app->post('/admin/postEditUser/:id',$authCheck(), function($id) use ($app) {
 		$user = R::load( 'user', $id);
 		$user->name = $app->request->post('name');
 		$user->password = $app->request->post('password');
-		$process_id = $app->request->post('process_id');
-		if($process_id == 'admin'){
-			$user->process_id = 0;
-			$user->type = 1;
-		}elseif($process_id == 'rudan'){
-			$user->process_id = 0;
-			$user->type = 2;
-		}else{
-			$process = R::load('process', $process_id);
-			if($process->type == 1) $user->type = 3;
-			else $user->type = 0;
-			$user->process_id = $process_id;
-		}
+		$user->role_id = $app->request->post('role_id');
+		// $process_id = $app->request->post('process_id');
+		// if($process_id == 'admin'){
+		// 	$user->process_id = 0;
+		// 	$user->type = 1;
+		// }elseif($process_id == 'rudan'){
+		// 	$user->process_id = 0;
+		// 	$user->type = 2;
+		// }else{
+		// 	$process = R::load('process', $process_id);
+		// 	if($process->type == 1) $user->type = 3;
+		// 	else $user->type = 0;
+		// 	$user->process_id = $process_id;
+		// }
 		R::store($user);
 		$app->redirect($app->urlFor('usersIndex'));
 	})->name('postEditUser');

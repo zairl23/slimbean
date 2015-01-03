@@ -41,5 +41,14 @@ $app->get('/', function() use ($app) {
 	exit;
 })->name('index');
 
+// test show 
+$app->get('/show/:id', function($id) use($app){
+	$order = R::load('order', $id);
+	$roles = R::find('role');
+	// var_dump(compact('order', 'roles'));exit;
+	$app->render('show.php', compact('order', 'roles'));
+	exit;
+});
+
 $app->run();
 ?>
