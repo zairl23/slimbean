@@ -23,6 +23,7 @@ $app->get('/logout',function() use ($app) {
 		$_SESSION['user_id'] = null;
 		$_SESSION['user_name'] = null;
 		$_SESSION['process_id'] = null;
+		$_SESSION['role_id'] = null;
 		$_SESSION['type'] = null;
 		$app->redirect($app->urlFor('index'));
 	}
@@ -37,6 +38,7 @@ $app->post('/postLogin', function() use ($app) {
 		$_SESSION['user_id'] = $check->id;
 		$_SESSION['user_name'] = $check->name;
 		$_SESSION['process_id'] = $check->process_id;
+		$_SESSION['role_id'] = $check->role_id;
 		$_SESSION['type'] = $check->type;
 		if($backUrl = $app->request->get('backUrl')){
 			$app->redirect($app->request->getRootUri() . $backUrl);
