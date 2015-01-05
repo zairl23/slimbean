@@ -1,7 +1,24 @@
 var Process = React.createClass({
 
 		getInitialState: function() {
-		    return {windowWidth: window.innerWidth};
+		    return {data:[]};
+		},
+
+
+		loadCommentsFromServer: function(){
+			var self = this;
+			$.ajax({
+			     url: this.props.url,
+			     dataType: 'json',
+			     success: function(data) {
+			     
+			       this.setState({data: data});
+				   self.draw(data);
+			     }.bind(this),
+			     error: function(xhr, status, err) {
+			       console.error(this.props.url, status, err.toString());
+			     }.bind(this)
+			   });
 		},
 
 		handleResize: function(e) {
@@ -9,9 +26,13 @@ var Process = React.createClass({
 		},
 
 		componentDidMount: function() {
-			this.draw();
-		 	// window.addEventListener('resize', this.handleResize);
+		   this.loadCommentsFromServer();
+		   setInterval(this.loadCommentsFromServer, this.props.pollInterval);
 		},
+
+		// componentDidMount: function() {
+		//  	// window.addEventListener('resize', this.handleResize);
+		// },
 
 		drawRectangle: function(positionX, positionY){
 			var rectangle = new paper.Rectangle(new paper.Point(20, 20), new paper.Size(60, 60));
@@ -27,19 +48,20 @@ var Process = React.createClass({
 			stateNameTxt.position = new paper.Point(positionX,positionY);
 		},
 
-		drawLine:function(){
-			var from = new paper.Point(70, 70);
-			var to   = new paper.Point(170, 170);
+		drawLine:function(fromX, fromY, toX, toY){
+			var from = new paper.Point(fromX, fromY);
+			var to   = new paper.Point(toX, toY);
 			var path = new paper.Path.Line(from, to);
 			path.strokeColor = 'black';
 		},
 
-		drawRole: function (positionX, positionY, name) {
+		drawRole: function(positionX, positionY, name) {
 			this.drawRectangle(positionX, positionY);
 			this.drawText(positionX, positionY, name);
 		},
 
-		draw: function(){
+		draw: function(data){
+			var self = this;
 			var canvas = document.getElementById('myCanvas');
 			paper.setup(canvas);
 			this.drawRole(40, 360, '销售员');
@@ -72,13 +94,21 @@ var Process = React.createClass({
 			this.drawRole(1340, 160, '司机');
 			this.drawRole(1140, 260, '审计员');
 			this.drawRole(1140, 160, '销售员');
-			// this.drawLine();
+			this.drawLine(70,360,210,360);//销售到审计
+			
+			$.each(data, function(index, value){
+				if(value.connect_id == 3){
+					self.drawLine(240, 330, 240, 290);//审计到仓库id=3
+				}
+			});
+
 			paper.view.draw();
+			
 		},
 
 		render: function() {
-		    return <canvas id="myCanvas" resize></canvas>;
-		  }
-		});
-
-		React.render(<Process src="/order/watch/1" />, document.getElementById('order-processing'));
+		    return (
+				<canvas id="myCanvas" resize></canvas>
+			);
+		}
+	});

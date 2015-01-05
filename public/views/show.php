@@ -33,13 +33,16 @@
 	<div id="order-processing"></div>
 
 	<?php include 'footer.php';?>
+	<script src="../public/js/paper.min.js"></script>
+	<script src="../public/js/react.js"></script>
+	<script src="../public/js/JSXTransformer.js"></script>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="../public/js/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="../public/js/bootstrap.min.js"></script>
-	<script src="../public/js/paper.min.js"></script>
-	<script src="../public/js/react.js"></script>
-	<script src="../public/js/JSXTransformer.js"></script>
 	<script type="text/jsx" src="../public/js/process.js"></script>
+	<script type="text/jsx">
+		React.render(<Process url="/order/watch/<?php echo $order_id;?>" pollInterval={2000} />, document.getElementById('order-processing'));
+	</script>
   </body>
 </html>

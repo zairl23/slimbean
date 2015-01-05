@@ -207,8 +207,3 @@ $app->get('/special/printQrcode/:id', $loginCheck(), function($id) use($app, $cr
 	$app->render('/special/printQrcode.php', compact('order_id', 'order'));
 })->name('printQrcode');
 
-
-// show one order and process start or not in mobile phone's browser
-$app->get('/special/showOrder/:id', function($id) use ($app){
-	echo "show order information";
-});

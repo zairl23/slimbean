@@ -13,9 +13,6 @@
 		  /*min-height: 2000px;*/
 		  padding-top: 100px;
 		}
-		.center{
-			text-align:center;
-		}
 	</style>
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -57,7 +54,7 @@
 			   </li>
 			 </ul> -->
 			 <!-- <ul class="nav navbar-nav navbar-right"> -->
-			<ul class="nav navbar-nav">
+			 <ul class="nav navbar-nav">
 				 <?php if(isset($_SESSION['user_id'])) :?>
 					<?php if($_SESSION['type'] == 1) :?>
 						<?php echo "<li class='active'><a href='../../admin'>你好！" . $_SESSION['user_name'] . "</a></li>";?>
@@ -78,24 +75,61 @@
 		 </div>
 	   </nav>
 
+   <div class="container">
+		<!-- <div class="header">
+		  <ul class="nav nav-pills pull-right" role="tablist">
+			<li role="presentation" class="active"><a href="#">Home</a></li>
+			<li role="presentation"><a href="#">About</a></li>
+			<li role="presentation"><a href="#">Contact</a></li>
+		  </ul>
+		  <h3 class="text-muted">Project name</h3>
+		</div> -->
+		<div class="jumbotron" style="text-align:center;">
+		  <h1><?php echo $order['name'];?></h1>
+		  <p class="lead"></p>
+		  <?php if($_SESSION['process_id'] == 0 && ($_SESSION['type'] == 1 || $_SESSION['type'] == 2)) :?>
+			<?php echo "<h1><a class='btn btn-lg btn-success' href='#' role='button'>" . $word . "</a></h1>";?>
+		  <?php elseif(!$word) : ?>
+				<?php echo "<p></p>";?>
+		  <?php else :?>
+			<?php echo "<h1><a class='btn btn-lg btn-success' href='" . $getUrl ."' role='button'>" . $word . "</a></h1>";?>
+		  <?php endif; ?>
+		  当前工序:<?php echo $nowProccess; ?>
+		</div>
 
-	<div class="jumbotron center">
-		<h1><?php echo $order['name'];?></h1>
-		<div id="scan"></div>
-	</div>
+	  <!--   <div class="row marketing">
+		  <div class="col-lg-6">
+			<h4>Subheading</h4>
+			<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
 
+			<h4>Subheading</h4>
+			<p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+			<h4>Subheading</h4>
+			<p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+		  </div>
+
+		  <div class="col-lg-6">
+			<h4>Subheading</h4>
+			<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+			<h4>Subheading</h4>
+			<p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+			<h4>Subheading</h4>
+			<p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+		  </div>
+		</div>
+
+		<div class="footer">
+		  <p>&copy; Company 2014</p>
+		</div> -->
+
+	  </div> <!-- /container -->
 	<?php include __DIR__.'/../footer.php';?>
-
-	<script src="../../public/js/paper.min.js"></script>
-	<script src="../../public/js/react.js"></script>
-	<script src="../../public/js/JSXTransformer.js"></script>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="../../public/js/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="../../public/js/bootstrap.min.js"></script>
-	<script type="text/jsx" src="../../public/js/scan.js"></script>
-	<script type="text/jsx">
-		React.render(<Scan url="/order/set/<?php echo $order['id']; ?>" />, document.getElementById('scan'));
-	</script>
   </body>
 </html>

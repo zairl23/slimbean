@@ -41,6 +41,28 @@
 		$order_new = R::load('order', $order_id);
 		$order_new->qrcode_path = '/special/showOrder/' . $order_id;
 		R::store($order_new);
+
+		$record = R::dispense('record');
+		$record->order_id = $order_id;
+		$record->connect_id = 39;
+		$record->created_at = time();
+		$record->ended_at = 0;
+		R::store($record);
+		unset($record);
+		$record = R::dispense('record');
+		$record->order_id = $order_id;
+		$record->connect_id = 2;
+		$record->created_at = time();
+		$record->ended_at = 0;
+		R::store($record);
+		unset($record);
+		$record = R::dispense('record');
+		$record->order_id = $order_id;
+		$record->connect_id = 3;
+		$record->created_at = time();
+		$record->ended_at = 0;
+		R::store($record);
+
 		$app->redirect($app->urlFor('adminIndex'));
 	})->name('postAddOrder');
 
