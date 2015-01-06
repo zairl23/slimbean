@@ -60,7 +60,7 @@ $app->get('/show/:id', function($id) use($app){
  */
 $app->get('/order/watch/:id', function($id) use($app){
 	$order = R::load('order', $id);
-	$records = R::getAll('SELECT connect_id FROM record WHERE order_id = :order_id', array('order_id' => $id));
+	$records = R::getAll('SELECT connect_id, ended_at FROM record WHERE order_id = :order_id', array('order_id' => $id));
 	echo json_encode($records);
 });
 
@@ -76,35 +76,80 @@ $app->get('/order/set/:id', $loginCheck, function($id) use($app){
 	$orderName = $order->name;
 
 	$role_id = $_SESSION['role_id'];
-	$role_id = 2;
+	// $role_id = 2;
 
-	$records = R::getAll('SELECT connect_id FROM record WHERE order_id = :order_id', array('order_id' => $id));
+	$operations = R::getAll('SELECT * FROM connect WHERE role_id = :role_id', array('role_id' => $role_id));
+
+	// $records = R::getAll('SELECT connect_id FROM record WHERE order_id = :order_id', array('order_id' => $id));
 
 	$setting = array();
 	// var_dump($records);exit;
-	foreach ($records as $key => $record) {
-
-		$connect = R::load('connect', $record['connect_id']);
-		// var_dump($connect->role_id);exit;
-		if($connect && ($role_id == $connect->role_id)){
-			$processName = $connect->desc;
-			$words = '执行';
+	foreach ($operations as $key => $operation) {
+		$record = R::find('record', 'order_id = :order_id and connect_id = :connect_id', array('order_id' => $id, 'connect_id' => $operation['id']));
+		// $connect = R::load('connect', $record['connect_id']);
+		// var_dump($record);exit;
+		if($record){
+			$processName = $operation['desc'];
+			$words = '已执行';
 			$url = '#1';
+			$connect_id = $operation['id'];
+			$to_id = $operation['follow_id'];
 		}else{
-			$processName = $connect->desc;
-			$words = '无操作';
+			$processName = $operation['desc'];
+			$words = '执行';
 			$url = '#0';
+			$connect_id = $operation['id'];
+			$to_id = $operation['follow_id'];
 		}
 		// var_dump($url);exit;
 		array_push($setting, array(
 			'words' => $words,
 			'url'   => $url,
 			'processName' => $processName,
+			'connect_id'  => $connect_id,
+			'order_id'    => $id,
+			'to_id'       => $to_id,
 		));
 		
 	}
 	// var_dump($setting);exit;
 	echo json_encode($setting);
+});
+
+/**
+ * Process the record log
+ * 
+ * @return json {json: 1(0)}0--success or 1 failure
+ * @author neychang
+ * @touch  2015年1月6日14:52:08
+ */
+$app->post('/order/operate', function() use($app){
+	$order_id = $app->request->post('order_id');
+	$connect_id = $app->request->post('connect_id');
+	$to_id = $app->request->post('to_id');
+	// Determine whether the record contain logined user's to process
+	$checkWhere = 'order_id = :order_id and to_id = :to_id';
+	$check = R::find('record', $checkWhere, array('order_id' => $order_id, 'to_id' => $_SESSION['role_id']));
+	if($check){
+		foreach ($check as $key => $value) {
+			if($value->ended_at == 0){
+				$value->ended_at = time();
+				R::store($value);
+			}
+		}
+	}
+	
+	$record = R::dispense('record');
+	$record->order_id = $order_id;
+	$record->connect_id = $connect_id;
+	$record->to_id = $to_id;
+	$record->created_at = time();
+	$record->ended_at  = 0;
+	if(R::store($record)){
+		echo json_encode(array('status' => 1));
+	}else{
+		echo json_decode(array('status' => 0));
+	}
 });
 
 $app->run();

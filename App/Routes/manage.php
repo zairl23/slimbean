@@ -42,26 +42,30 @@
 		$order_new->qrcode_path = '/special/showOrder/' . $order_id;
 		R::store($order_new);
 
-		$record = R::dispense('record');
-		$record->order_id = $order_id;
-		$record->connect_id = 39;
-		$record->created_at = time();
-		$record->ended_at = 0;
-		R::store($record);
-		unset($record);
-		$record = R::dispense('record');
-		$record->order_id = $order_id;
-		$record->connect_id = 2;
-		$record->created_at = time();
-		$record->ended_at = 0;
-		R::store($record);
-		unset($record);
-		$record = R::dispense('record');
-		$record->order_id = $order_id;
-		$record->connect_id = 3;
-		$record->created_at = time();
-		$record->ended_at = 0;
-		R::store($record);
+		//store record
+		// $record = R::dispense('record');
+		// $record->order_id = $order_id;
+		// $record->connect_id = 39;
+		// $record->to_id = 3;
+		// $record->created_at = time();
+		// $record->ended_at = 0;
+		// R::store($record);
+		// unset($record);
+		// $record = R::dispense('record');
+		// $record->order_id = $order_id;
+		// $record->connect_id = 2;
+		// $record->to_id = 4;
+		// $record->created_at = time();
+		// $record->ended_at = 0;
+		// R::store($record);
+		// unset($record);
+		// $record = R::dispense('record');
+		// $record->order_id = $order_id;
+		// $record->connect_id = 3;
+		// $record->to_id = 5;
+		// $record->created_at = time();
+		// $record->ended_at = 0;
+		// R::store($record);
 
 		$app->redirect($app->urlFor('adminIndex'));
 	})->name('postAddOrder');
@@ -153,6 +157,12 @@
 		// 	$user->process_id = $process_id;
 		// }
 		$user->role_id = $app->request->post('role_id');
+		//审计员可以发布订单
+		if($app->request->post('role_id') == 2){
+			$user->type = 2;
+		}else{
+			$user->type=0;
+		}
 		R::store($user);
 		$app->redirect($app->urlFor('usersIndex'));
 	})->name('postUser');

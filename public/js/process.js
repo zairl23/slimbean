@@ -5,7 +5,7 @@ var Process = React.createClass({
 		},
 
 
-		loadCommentsFromServer: function(){
+		loadStatusFromServer: function(){
 			var self = this;
 			$.ajax({
 			     url: this.props.url,
@@ -26,8 +26,8 @@ var Process = React.createClass({
 		},
 
 		componentDidMount: function() {
-		   this.loadCommentsFromServer();
-		   setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+		   this.loadStatusFromServer();
+		   setInterval(this.loadStatusFromServer, this.props.pollInterval);
 		},
 
 		// componentDidMount: function() {
@@ -48,11 +48,37 @@ var Process = React.createClass({
 			stateNameTxt.position = new paper.Point(positionX,positionY);
 		},
 
-		drawLine:function(fromX, fromY, toX, toY){
+		drawLine:function(fromX, fromY, toX, toY, direction, color){
 			var from = new paper.Point(fromX, fromY);
 			var to   = new paper.Point(toX, toY);
 			var path = new paper.Path.Line(from, to);
-			path.strokeColor = 'black';
+
+			if(direction != undefined){
+				if (direction == 0){
+					var arrawOne = new paper.Point(toX-5, toY-5);
+					var arrawTwo = new paper.Point(toX-5, toY+5);
+				}else if (direction == 1){
+					var arrawOne = new paper.Point(toX-5, toY-5);
+					var arrawTwo = new paper.Point(toX+5, toY-5);
+				}else if (direction == 2) {
+					var arrawOne = new paper.Point(toX-5, toY-5);
+					var arrawTwo = new paper.Point(toX+5, toY-5);
+				}else if (direction == 3) {
+					var arrawOne = new paper.Point(toX-5, toY+5);
+					var arrawTwo = new paper.Point(toX+5, toY+5);
+				}
+				
+				var arrowPathOne = new paper.Path.Line(to, arrawOne);
+				var arrowPathTwo = new paper.Path.Line(to, arrawTwo);
+				arrowPathOne.strokeColor = 'black';
+				arrowPathTwo.strokeColor = 'black';
+			}
+
+			if(color != undefined){
+				path.strokeColor = color;
+			}else{
+				path.strokeColor = 'black';
+			}
 		},
 
 		drawRole: function(positionX, positionY, name) {
@@ -70,7 +96,8 @@ var Process = React.createClass({
 			this.drawRole(240, 460, '制作主管');
 			this.drawRole(440, 360, '工艺下单员');
 			this.drawRole(440, 460, '制作员');
-			this.drawRole(540, 460, '数码部');
+			this.drawRole(540, 460, '检查员');
+			this.drawRole(640, 460, '数码部');
 			this.drawRole(340, 560, '排版员');
 			this.drawRole(440, 160, '采购员');
 			this.drawRole(240, 160, '总经办经理');
@@ -94,11 +121,60 @@ var Process = React.createClass({
 			this.drawRole(1340, 160, '司机');
 			this.drawRole(1140, 260, '审计员');
 			this.drawRole(1140, 160, '销售员');
-			this.drawLine(70,360,210,360);//销售到审计
+			this.drawLine(70,360,210,360, 0, 'red');//销售到审计
 			
 			$.each(data, function(index, value){
-				if(value.connect_id == 3){
-					self.drawLine(240, 330, 240, 290);//审计到仓库id=3
+				// 0--x right, 1--y down, 2--x--left, 3--y up ,4 --no
+				// self.drawLine(270,460,410,460,0);
+				switch(value.connect_id){
+					case '2'://审计到制作主管
+						if(value.ended_at != 0){
+							self.drawLine(240, 390, 240, 430, 1, 'red');
+						}else{
+							self.drawLine(240, 390, 240, 430, 1);
+						}
+						break;
+					case '3'://审计到仓库主管
+						if(value.ended_at != 0){
+							self.drawLine(240, 330, 240, 290, 3, 'red');
+						}else{
+							self.drawLine(240, 330, 240, 290, 3);
+						}
+						break;
+					case '4'://仓库主管到工艺下单员
+						if(value.ended_at != 0){
+							self.drawLine(270, 260, 440, 260, 'red');
+							self.drawLine(440, 260, 440, 330, 1, 'red');
+						}else{
+							self.drawLine(270, 260, 440, 260);
+							self.drawLine(440, 260, 440, 330, 1);
+						}
+						break;
+					case '15':
+						if(value.ended_at != 0){
+							self.drawLine(270,460,410,460,0,'red');
+						}else{
+							self.drawLine(270,460,410,460,0);
+						}
+						break;
+					case '18':
+						if(value.ended_at != 0){
+							self.drawLine(240, 490, 240, 560, undefined, 'red');
+							self.drawLine(240, 560, 310, 560, 0, 'red');
+						}else{
+							self.drawLine(240, 490, 240, 560);
+							self.drawLine(240, 560, 310, 560, 0);
+						}
+						break;
+					case '39'://审计到工艺下单员
+						if(value.ended_at != 0){
+							self.drawLine(270, 360, 410, 360, 0, 'red');
+						}else{
+							self.drawLine(270, 360, 410, 360, 0);
+						}
+						break;
+					default:
+						// console.log('dd');
 				}
 			});
 
