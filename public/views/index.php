@@ -93,10 +93,6 @@
 			   <tr>
 				   <td><?php echo $order['order_number']; ?></td>
 				   <td><?php echo $order['name']; ?></td>
-				   <!-- <td><?php echo $order['costumer_name']; ?></td> -->
-				   <?php $endLog = end($order->ownOrderlogList); ?>
-				   <?php $endId = $endLog['process_id'];?>
-				   <?php $is_waibao = $endLog['is_waibao'];?>
 				   <td>
 				   		<?php if($order->desc) :?>
 				   			<?php echo "<button class='btn btn-success'>" . $order->desc . "</button>";?>
