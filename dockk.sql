@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2015 年 01 月 05 日 11:59
+-- 生成日期: 2015 年 01 月 07 日 09:24
 -- 服务器版本: 5.5.8
 -- PHP 版本: 5.3.5
 
@@ -39,9 +39,9 @@ CREATE TABLE IF NOT EXISTS `connect` (
 
 INSERT INTO `connect` (`id`, `role_id`, `follow_id`, `desc`) VALUES
 (1, 1, 2, '销售员到审计员:文件，合同，订单，客户样'),
-(2, 2, 4, '审计员到制作主管:送客户样，通知文件处理'),
-(3, 2, 5, '审计员到仓库主管:通知备料'),
-(4, 5, 3, '仓库主管到工艺下单员:通知有无库存'),
+(2, 2, 4, '审计员到制作主管:送客户样,通知文件处理'),
+(3, 2, 5, '审计员到仓库主管:询料'),
+(4, 5, 3, '仓库主管到工艺下单员:有库存(注明)无库存通知'),
 (5, 3, 4, '工艺下单员到制作主管:客户样，数码样，通知排版，申完工艺'),
 (6, 3, 10, '工艺下单员到采购员:通知备料'),
 (7, 3, 11, '工艺下单员到质量经理:数码样'),
@@ -53,11 +53,11 @@ INSERT INTO `connect` (`id`, `role_id`, `follow_id`, `desc`) VALUES
 (13, 10, 13, '采购员到总经办经理:采购物料审计'),
 (14, 13, 14, '总经办经理到财务:审核盖章'),
 (15, 4, 6, '制作主管到制作员:客户样，通知处理文件'),
-(16, 6, 7, '制作员到数码部:打数码样'),
-(17, 7, 6, '数码部到制作员:数码样完成'),
+(16, 6, 9, '制作员到检查员:通知检查文件'),
+(17, 7, 3, '数码部到工艺下单员:数码样完成'),
 (18, 4, 8, '制作主管到排版员:客户样，数码样，拼版'),
 (19, 8, 9, '排版员到检查员:客户样数码样拼版完成'),
-(20, 9, 4, '检查员到制作主管:检查完成'),
+(20, 9, 7, '检查员到数码部:检查完成'),
 (21, 4, 15, '制作主管到调度员:通知文件处理检查完成'),
 (22, 15, 23, '调度员到版房:通知晒版'),
 (23, 10, 12, '采购到入库'),
@@ -76,7 +76,8 @@ INSERT INTO `connect` (`id`, `role_id`, `follow_id`, `desc`) VALUES
 (36, 21, 22, '仓库出货员到司机：安排送货'),
 (37, 22, 21, '司机到仓库出货员:送货回单'),
 (38, 2, 1, '审计员到销售员:送货回单'),
-(39, 2, 3, '审计员到工艺下单员:工价审计完成');
+(39, 2, 3, '审计员到工艺下单员:工价审计完成，订单审核完成'),
+(40, 9, 15, '检查员到调度员:通知文件处理检查完成');
 
 -- --------------------------------------------------------
 
@@ -96,17 +97,17 @@ CREATE TABLE IF NOT EXISTS `order` (
   `updated_at` int(11) NOT NULL,
   `order_type` int(11) NOT NULL DEFAULT '1' COMMENT '订单类型',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
 
 --
 -- 转存表中的数据 `order`
 --
 
 INSERT INTO `order` (`id`, `order_number`, `name`, `costumer_name`, `qrcode_path`, `status`, `is_completed`, `created_at`, `updated_at`, `order_type`) VALUES
-(1, '111', '订单1', '客户1', '/special/showOrder/1', '9', 0, 1418621035, 1420262621, 1),
-(2, '124', '产品名称-2', '客户-3', '/special/showOrder/2', '1', 0, 1418628926, 1419243767, 1),
-(3, '125', '产品6', '客户名称-2', '/special/showOrder/3', '5', 1, 1418629467, 1418634743, 1),
-(7, '333', '天子足球', '武汉卓尔', '/special/showOrder/7', '0', 1, 1420449652, 1420449652, 1);
+(11, '321', '小学教材印刷', '新华小学', '/special/showOrder/11', '0', 1, 1420528766, 1420528766, 1),
+(12, '333', '天下足球体育杂志', '武汉卓尔足球', '/special/showOrder/12', '0', 1, 1420615275, 1420615275, 1),
+(13, '555', '美丽画册', '湖北美术学院', '/special/showOrder/13', '0', 1, 1420615492, 1420615492, 1),
+(14, '111', '百度公司年历', '百度', '/special/showOrder/14', '0', 1, 1420618680, 1420618680, 1);
 
 -- --------------------------------------------------------
 
@@ -192,19 +193,31 @@ CREATE TABLE IF NOT EXISTS `record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `connect_id` int(11) NOT NULL,
+  `to_id` int(11) NOT NULL,
   `created_at` int(11) NOT NULL,
   `ended_at` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=25 ;
 
 --
 -- 转存表中的数据 `record`
 --
 
-INSERT INTO `record` (`id`, `order_id`, `connect_id`, `created_at`, `ended_at`) VALUES
-(4, 7, 39, 1420449652, 0),
-(5, 7, 2, 1420449652, 0),
-(6, 7, 3, 1420449652, 0);
+INSERT INTO `record` (`id`, `order_id`, `connect_id`, `to_id`, `created_at`, `ended_at`) VALUES
+(9, 11, 2, 4, 1420531166, 1420535767),
+(10, 11, 3, 5, 1420531186, 1420531463),
+(11, 11, 39, 3, 1420531192, 0),
+(14, 11, 4, 3, 1420534452, 0),
+(15, 11, 15, 6, 1420535767, 1420607358),
+(16, 11, 18, 8, 1420535829, 1420607630),
+(17, 11, 16, 9, 1420607358, 1420608480),
+(18, 11, 19, 9, 1420607630, 1420608480),
+(19, 11, 40, 15, 1420608480, 0),
+(20, 11, 20, 7, 1420608945, 1420609561),
+(21, 11, 17, 3, 1420609561, 0),
+(22, 13, 2, 4, 1420615552, 0),
+(23, 13, 3, 5, 1420615581, 0),
+(24, 14, 39, 3, 1420618965, 0);
 
 -- --------------------------------------------------------
 
@@ -281,7 +294,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `type` smallint(2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=31 ;
 
 --
 -- 转存表中的数据 `user`
@@ -308,4 +321,13 @@ INSERT INTO `user` (`id`, `role_id`, `process_id`, `name`, `password`, `type`) V
 (18, 0, 12, '员工6发外', '123456', 3),
 (19, 0, 14, '员工7发外', '123456', 3),
 (20, 18, 0, '张三', '123456', 0),
-(21, 2, 0, '刘强', '123456', 0);
+(21, 2, 0, '刘强', '123456', 2),
+(22, 5, 0, '仓库主管', '123456', 0),
+(23, 2, 0, '审计员', '123456', 2),
+(24, 4, 0, '制作主管', '123456', 0),
+(25, 6, 0, '制作员', '123456', 0),
+(26, 8, 0, '排版员', '123456', 0),
+(27, 9, 0, '检查员', '123456', 0),
+(28, 3, 0, '工艺下单员', '123456', 0),
+(29, 7, 0, '数码部', '123456', 0),
+(30, 2, 0, '审计员', '123456', 2);
