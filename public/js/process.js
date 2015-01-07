@@ -39,6 +39,12 @@ var Process = React.createClass({
 			var shape = new paper.Shape.Rectangle(rectangle);
 			shape.position = new paper.Point(positionX, positionY);
 			shape.strokeColor = 'black';
+			// shape.onMouseEnter = function(){
+			// 	console.log('ff');
+			// 	this.strokeColor = 'blue';
+			// }
+			// http://paperjs.org/tutorials/animation/creating-animations/
+
 		},
 
 		drawText: function(positionX, positionY, content){
@@ -48,7 +54,9 @@ var Process = React.createClass({
 			stateNameTxt.position = new paper.Point(positionX,positionY);
 		},
 
-		drawLine:function(fromX, fromY, toX, toY, direction, color){
+		drawLine:function(content, fromX, fromY, toX, toY, direction, color){
+			var group = new paper.Group();
+
 			var from = new paper.Point(fromX, fromY);
 			var to   = new paper.Point(toX, toY);
 			var path = new paper.Path.Line(from, to);
@@ -70,8 +78,17 @@ var Process = React.createClass({
 				
 				var arrowPathOne = new paper.Path.Line(to, arrawOne);
 				var arrowPathTwo = new paper.Path.Line(to, arrawTwo);
-				arrowPathOne.strokeColor = 'black';
-				arrowPathTwo.strokeColor = 'black';
+				
+				if(color != undefined){
+					arrowPathOne.strokeColor = color;
+					arrowPathTwo.strokeColor = color;
+				}else{
+					arrowPathOne.strokeColor = 'black';
+					arrowPathTwo.strokeColor = 'black';
+				}
+
+				group.addChild(arrowPathOne);
+				group.addChild(arrowPathTwo);
 			}
 
 			if(color != undefined){
@@ -79,6 +96,35 @@ var Process = React.createClass({
 			}else{
 				path.strokeColor = 'black';
 			}
+
+			group.addChild(path);
+			// http://people.mozilla.org/~stmichaud/paperjs.org/reference/textitem.html
+			// http://stackoverflow.com/questions/25599831/tooltip-in-paper-js
+			path.onMouseEnter = function(event){
+				console.log('Enter');
+				this.strokeColor = 'blue';
+
+				var tooltipTxt = new paper.PointText(0, 0);
+				tooltipTxt.content = content;
+				tooltipTxt.name = 'stateNameTxt';
+				tooltipTxt.position = this.position;
+				tooltipTxt.fillColor = 'red';
+				// var tooltipRect = new paper.Rectangle(this.position + new paper.Point(-20, -40), new paper.Size(40, 28));
+				// // Create tooltip from rectangle
+				// var tooltip = new paper.Shape.Rectangle(tooltipRect);
+				// tooltip.fillColor = 'red';
+				// tooltip.strokeColor = 'black';
+				// // Name the tooltip so we can retrieve it later
+				// tooltip.name = 'tooltip';
+				// tooltip.content = 'Hello Toolltip';
+				// Add the tooltip to the parent (group)
+				this.parent.addChild(tooltipTxt);
+			};
+			// path.onMouseLeave = function(event){
+			// 	console.log('leave');
+			// 	this.parent.children['tooltipTxt'].remove();
+			// };
+			// path.onMouseOver();
 		},
 
 		drawRole: function(positionX, positionY, name) {
@@ -121,56 +167,101 @@ var Process = React.createClass({
 			this.drawRole(1340, 160, '司机');
 			this.drawRole(1140, 260, '审计员');
 			this.drawRole(1140, 160, '销售员');
-			this.drawLine(70,360,210,360, 0, 'red');//销售到审计
-			
+			this.drawLine('销售信息送达设计员', 70,360,210,360, 0, 'red');//销售到审计
+
 			$.each(data, function(index, value){
 				// 0--x right, 1--y down, 2--x--left, 3--y up ,4 --no
-				// self.drawLine(270,460,410,460,0);
+				// self.drawLine(value.desc, 640,430,640,410);
+				// self.drawLine(value.desc, 640,410,440,410);
+				// self.drawLine(value.desc, 440,410,440,390,3);
 				switch(value.connect_id){
 					case '2'://审计到制作主管
 						if(value.ended_at != 0){
-							self.drawLine(240, 390, 240, 430, 1, 'red');
+							self.drawLine(value.desc, 240, 390, 240, 430, 1, 'red');
 						}else{
-							self.drawLine(240, 390, 240, 430, 1);
+							self.drawLine(value.desc, 240, 390, 240, 430, 1);
 						}
 						break;
 					case '3'://审计到仓库主管
 						if(value.ended_at != 0){
-							self.drawLine(240, 330, 240, 290, 3, 'red');
+							self.drawLine(value.desc, 240, 330, 240, 290, 3, 'red');
 						}else{
-							self.drawLine(240, 330, 240, 290, 3);
+							self.drawLine(value.desc, 240, 330, 240, 290, 3);
 						}
 						break;
 					case '4'://仓库主管到工艺下单员
 						if(value.ended_at != 0){
-							self.drawLine(270, 260, 440, 260, 'red');
-							self.drawLine(440, 260, 440, 330, 1, 'red');
+							self.drawLine(value.desc, 270, 260, 440, 260, 'red');
+							self.drawLine(value.desc, 440, 260, 440, 330, 1, 'red');
 						}else{
-							self.drawLine(270, 260, 440, 260);
-							self.drawLine(440, 260, 440, 330, 1);
+							self.drawLine(value.desc, 270, 260, 440, 260);
+							self.drawLine(value.desc, 440, 260, 440, 330, 1);
 						}
 						break;
-					case '15':
+					case '15'://制作主管到制作员
 						if(value.ended_at != 0){
-							self.drawLine(270,460,410,460,0,'red');
+							self.drawLine(value.desc, 270,460,410,460,0,'red');
 						}else{
-							self.drawLine(270,460,410,460,0);
+							self.drawLine(value.desc, 270,460,410,460,0);
 						}
 						break;
-					case '18':
+					case '16'://制作员到检查员
 						if(value.ended_at != 0){
-							self.drawLine(240, 490, 240, 560, undefined, 'red');
-							self.drawLine(240, 560, 310, 560, 0, 'red');
+							self.drawLine(value.desc, 470,460,510,460,0, 'red');
 						}else{
-							self.drawLine(240, 490, 240, 560);
-							self.drawLine(240, 560, 310, 560, 0);
+							self.drawLine(value.desc, 470,460,510,460,0);
+						}
+						break;
+					case '17'://数码部到工艺下单员
+						if(value.ended_at != 0){
+							self.drawLine(value.desc, 640,430,640,410,'red');
+							self.drawLine(value.desc, 640,410,440,410,'red');
+							self.drawLine(value.desc, 440,410,440,390,3, 'red');
+						}else{
+							self.drawLine(value.desc, 640,430,640,410);
+							self.drawLine(value.desc, 640,410,440,410);
+							self.drawLine(value.desc, 440,410,440,390,3);
+						}
+						break;
+					case '18'://制作主管到排版员
+						if(value.ended_at != 0){
+							self.drawLine(value.desc, 240, 490, 240, 560, undefined, 'red');
+							self.drawLine(value.desc, 240, 560, 310, 560, 0, 'red');
+						}else{
+							self.drawLine(value.desc, 240, 490, 240, 560);
+							self.drawLine(value.desc, 240, 560, 310, 560, 0);
+						}
+						break;
+					case '19'://排版员到检查员
+						if(value.ended_at != 0){
+							self.drawLine(value.desc, 370,560,510,560,0, 'red');
+						}else{
+							self.drawLine(value.desc, 370,560,510,560,0);
+						}
+						break;
+					case '20'://检查员到数码部
+						if(value.ended_at != 0){
+							self.drawLine(value.desc, 570,460,610,460,0, 'red');
+						}else{
+							self.drawLine(value.desc, 570,460,610,460,0);
 						}
 						break;
 					case '39'://审计到工艺下单员
 						if(value.ended_at != 0){
-							self.drawLine(270, 360, 410, 360, 0, 'red');
+							self.drawLine(value.desc, 270, 360, 410, 360, 0, 'red');
 						}else{
-							self.drawLine(270, 360, 410, 360, 0);
+							self.drawLine(value.desc, 270, 360, 410, 360, 0);
+						}
+						break;
+					case '40'://检查员到调度员
+						if(value.ended_at != 0){
+							self.drawLine(value.desc, 570,560,590,560,'red');
+							self.drawLine(value.desc, 590,560,590,360, 'red');
+							self.drawLine(value.desc, 590,360,610,360,0, 'red');
+						}else{
+							self.drawLine(value.desc, 570,560,590,560);
+							self.drawLine(value.desc, 590,560,590,360);
+							self.drawLine(value.desc, 590,360,610,360,0);
 						}
 						break;
 					default:

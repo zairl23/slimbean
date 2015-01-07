@@ -12,8 +12,8 @@
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
-	  <script src="../publ../html5shiv.min.js"></script>
-	  <script src="../publ../respond.min.js"></script>
+	  <script src="../public/js/html5shiv.min.js"></script>
+	  <script src="../public/js/respond.min.js"></script>
 	<![endif]-->
   </head>
   <body>
@@ -53,54 +53,61 @@
 	<div class="container-fluid">
 		<!-- <div class="row"> -->
 			<div class="col-sm-3 col-md-2 sidebar">
-				<?php include __DIR__ . '/../../sidebar.php';?>
+			   <?php include __DIR__ . '/../../sidebar.php' ;?>
 			</div>
 
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<h1 class="page-header">员工列表</h1>
-				  <a title="增加员工" href="./addUser"><span class="glyphicon glyphicon-plus"></span></a>
 				<!-- <h2 class="sub-header">Section title</h2> -->
-				<div class="table-responsive">
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th>姓名</th>
-								<th>岗位</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($users as $user) : ?>
-							<tr>
-								<td><?php echo $user['name']; ?></td>
-								<!-- <td>
-									<?php if($user['type'] == 1) : ?>
-											<?php echo "管理员"; ?>
-									<?php elseif($user['type'] == 2) : ?>
-										<?php echo "入单"; ?>
-									<?php else: ?>
-										<?php foreach ($processes as $process) : ?>
-											<?php if($user['process_id'] == $process['id']) : ?>
-												<?php echo $process['name'];?>
-											<?php endif ?>
-										<?php endforeach; ?>
-									<?php endif;?>
-							   </td> -->
-							   <td>
-								   <?php foreach ($roles as $role) : ?>
-									   <?php if($user['role_id'] == $role['id']) : ?>
-										   <?php echo $role['name'];?>
-									   <?php endif ?>
-								   <?php endforeach; ?>
-							   </td>
-							   <td>
-									<a id="edit" href=<?php echo "./editUser/" . $user['id']; ?> name="edit" class="btn btn-success">编辑</a>
-									<a id="deleteUser" onClick="if(confirm('您确定删除此条消息么?')) {window.location='./deleteUser/'+ <?php echo $user['id']; ?>;} else {return false;}" name="删除" class="btn btn-danger">删除</a>
-							   </td>
-							</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
+				<form class="form-horizontal" method="post" action="<?php echo $postUrl; ?>">
+				<fieldset>
+
+				<!-- Form Name -->
+				<legend>新建工序</legend>
+
+				<div class="control-group">
+				  <label class="control-label" for="role_id">岗位从</label>
+				  <div class="controls">
+					<select id="selectbasic" name="role_id" class="form-control">
+						<option value="0">请选择</option>
+						<?php foreach ($roles as $role) : ?>
+							<?php echo "<option value=". $role['id'] . ">" . $role['name'] . "</option>";?>
+						<?php endforeach; ?>
+					</select>
+
+				  </div>
 				</div>
+
+				<div class="control-group">
+				  <label class="control-label" for="role_id">岗位到</label>
+				  <div class="controls">
+					<select id="selectbasic" name="follow_id" class="form-control">
+						<option value="0">请选择</option>
+						<?php foreach ($roles as $role) : ?>
+							<?php echo "<option value=". $role['id'] . ">" . $role['name'] . "</option>";?>
+						<?php endforeach; ?>
+					</select>
+
+				  </div>
+				</div>
+
+				<!-- Text input-->
+				<div class="control-group">
+				  <label class="control-label" for="name">工序描述</label>
+				  <div class="controls">
+					<input id="name" name="desc" type="text" placeholder="工序描述" class="form-control input-xxlarge" required="">
+				  </div>
+				</div>
+
+				<!-- Button -->
+				<div class="control-group">
+				  <!-- <label class="control-label" for="">保存</label> -->
+				  <div class="controls">
+					<button id="" name="" class="btn btn-primary">保存</button>
+				  </div>
+				</div>
+
+				</fieldset>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -108,8 +115,8 @@
 	<?php include __DIR__.'/../../footer.php';?>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="../publ../jquery.min.js"></script>
+	<script src="../public/js/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="../publ../bootstrap.min.js"></script>
+	<script src="../public/js/bootstrap.min.js"></script>
   </body>
 </html>

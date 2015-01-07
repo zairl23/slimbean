@@ -14,10 +14,13 @@
 # @touch  2015年1月3日10:54:51
 #=======================================================================
 $menuShow = function ($menuName){
+	
 	$orderActive = '';
 	$userActive = '';
 	$processActive = '';
 	$roleActive = '';
+	$gongxuActive = '';
+	
 	switch ($menuName) {
 		case 'order':
 			$orderActive = 'active';
@@ -31,7 +34,10 @@ $menuShow = function ($menuName){
 		case 'role':
 			$roleActive = 'active';
 			break;
+		case 'gongxu':
+			$gongxuActive = 'active';
+			break;
 	}
 
-	return compact('orderActive', 'userActive', 'processActive', 'roleActive');
+	return compact('orderActive', 'userActive', 'processActive', 'roleActive', 'gongxuActive');
 };

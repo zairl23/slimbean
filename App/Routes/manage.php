@@ -17,10 +17,16 @@
 #=======================================================================
 	$app->get('/admin', $authCheck(), function() use ($app, $menuShow) {
 		$orders = R::find('order');
+		foreach ($orders as $key => $value) {
+			$record = end($value->ownRecordList);
+			if($record) {
+				$orders[$key]['desc'] = R::load('connect', $record->connect_id)->desc;
+			}
+		}
 		// $orderLog = R::findOne('orderlog', 'ORDER BY created_at DESC LIMIT 1');
-		$processes = R::find('process');
+		// $processes = R::find('process');
 		$menus = $menuShow('order');
-		$app->render('/admin/index.php', compact('orders','processes','menus'));
+		$app->render('/admin/index.php', compact('orders','menus'));
 	})->name('adminIndex');
 
 	$app->get('/admin/addOrder', $authCheck(), function() use ($app, $menuShow) {
@@ -275,6 +281,7 @@
 		$menus = $menuShow('role');
 		$app->render('/admin/roles/index.php', compact('roles','menus'));
 	})->name('rolesIndex');
+
 	$app->get('/admin/addRole', $authCheck(), function() use ($app, $menuShow) {
 		$postUrl = $app->urlFor('postRole');
 		$menus = $menuShow('role');
@@ -308,3 +315,56 @@
 		R::trash($role);
 		$app->redirect($app->urlFor('rolesIndex'));
 	});
+
+#=======================================================================
+# 后台管理接口--Gongxu--新工序管理
+# @author neychang
+# @touch  2015年1月7日14:06:35
+#=======================================================================
+	$app->get('/admin/gongxus',$authCheck(), function() use ($app, $menuShow) {
+		
+		$gongxus = R::getAll('SELECT * FROM connect');
+		
+		foreach ($gongxus as $key => $value) {
+			$gongxus[$key]['from_name'] = R::load('role', $value['role_id'])->name;
+			$gongxus[$key]['to_name'] = R::load('role', $value['follow_id'])->name;
+		}
+		
+		$menus = $menuShow('gongxu');
+		
+		$app->render('/admin/gongxus/index.php', compact('gongxus','menus'));
+
+	})->name('gongxusIndex');
+
+	$app->get('/admin/addGongxu', $authCheck(), function() use ($app, $menuShow) {
+		$roles = R::find('role');
+		$postUrl = $app->urlFor('postGongxu');
+		$menus = $menuShow('gongxu');
+		$app->render('/admin/gongxus/add.php', compact('postUrl','menus', 'roles'));
+	})->name('addGongxu');
+
+	$app->post('/admin/postGongxu', $authCheck(), function() use ($app) {
+		$connect = R::dispense('connect');
+		$connect->desc = $app->request->post('desc');
+		$connect->role_id = $app->request->post('role_id');
+		$connect->follow_id = $app->request->post('follow_id');
+		$rid = R::store($connect);
+		$app->redirect($app->urlFor('gongxusIndex'));
+	})->name('postGongxu');
+
+	$app->get('/admin/editGongxu/:id',$authCheck(), function($id) use ($app, $menuShow) {
+		$roles = R::find('role');
+		$gongxu = R::load('connect', $id);
+		$postUrl = $app->urlFor('postEditGongxu', array('id' => $id));
+		$menus = $menuShow('gongxu');
+		$app->render('/admin/gongxus/edit.php', compact('roles', 'gongxu', 'postUrl','menus'));
+	})->name('editGongxu');
+
+	$app->post('/admin/postEditGongxu/:id', $authCheck(), function($id) use ($app) {
+		$gongxu = R::load('connect', $id);
+		$gongxu->desc = $app->request->post('desc');
+		$gongxu->role_id = $app->request->post('role_id');
+		$gongxu->follow_id = $app->request->post('follow_id');
+		R::store($gongxu);
+		$app->redirect($app->urlFor('gongxusIndex'));
+	})->name('postEditGongxu');

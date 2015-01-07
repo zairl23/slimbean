@@ -98,45 +98,11 @@
 				   <?php $endId = $endLog['process_id'];?>
 				   <?php $is_waibao = $endLog['is_waibao'];?>
 				   <td>
-					  <?php if($order['status'] >= 0) : ?>
-						   <?php echo "<button id='edit' name='edit' class='btn btn-danger'>订单已生成</button>";?>
-					   <?php endif; ?>
-					  <?php foreach ($processes as $process) : ?>
-					   <?php if($endId > $process['id']) : ?>
-							   <?php foreach ($order->ownOrderlogList as $log) :?>
-								   <?php if($log['process_id'] == $process['id'] && $log['is_waibao'] == 0) :?>
-									  <?php echo "<button id='edit' name='edit' class='btn btn-danger'>{$process['name']}已完成</button>";?>
-									<?php elseif($log['process_id'] == $process['id'] && $log['is_waibao'] == 1 && $log['is_completed'] == 1) :?>
-										<?php echo "<button id='edit' name='edit' class='btn btn-success'>发外运行中</button>";?>
-									<?php elseif($log['process_id'] == $process['id'] && $log['is_waibao'] == 1 && $log['is_completed'] == 2) :?>
-										<?php echo "<button id='edit' name='edit' class='btn btn-danger'>发外已完成</button>";?>
-								   <?php endif;?>
-							   <?php endforeach;?>
-					   <?php elseif(($endId == $process['id']) && $is_waibao) : ?>
-							 <?php foreach ($order->ownOrderlogList as $log) :?>
-								<?php if($log['process_id'] == $process['id'] && $log['is_waibao'] != 1) :?>
-									<?php if($log['is_completed'] == 2) :?>
-										<?php echo "<button id='edit' name='edit' class='btn btn-danger'>{$process['name']}已完成</button>";?>
-									<?php elseif($log['is_completed'] == 1) :?>
-										<?php echo "<button id='edit' name='edit' class='btn btn-success'>{$process['name']}运行中</button>";?>
-									<?php endif;?>
-							  <?php endif;?>
-							 <?php endforeach;?>
-					  <?php endif;?>
-					  <?php if($process['id'] == $endId && $endLog['is_completed'] == 2) :?>
-									<?php if($is_waibao) :?>
-									   <?php echo "<button id='edit' name='edit' class='btn btn-danger'>发外已完成</button>";?>
-									<?php else:?>
-										<?php echo "<button id='edit' name='edit' class='btn btn-danger'>{$process['name']}已完成</button>";?>
-								   <?php endif;?>
-					   <?php elseif($process['id'] == $endId && $endLog['is_completed'] == 1) :?>
-							  <?php if($is_waibao) :?>
-								 <?php echo "<button id='edit' name='edit' class='btn btn-success'>发外运行中</button>";?>
-							  <?php else:?>
-								  <?php echo "<button id='edit' name='edit' class='btn btn-success'>{$process['name']}运行中</button>";?>
-							  <?php endif;?>
-					   <?php endif;?>
-					<?php endforeach;?>
+				   		<?php if($order->desc) :?>
+				   			<?php echo "<button class='btn btn-success'>" . $order->desc . "</button>";?>
+				   		<?php else :?>
+				   			<?php echo "<button class='btn btn-danger'>订单已生成<br>" . date('Y-m-d H:i:s', $order['created_at']) . "</button>";?>
+						<?php endif;?>
 				   </td>
 				   <td>
 					 <a id="scanOrder" href=<?php echo "./special/showQrcode/" .  $order['id'];?> class="btn btn-primary">扫描</a>

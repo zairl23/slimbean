@@ -10,9 +10,15 @@
 */
 $app->get('/normal', $authCheckNoraml(), function() use ($app) {
 	$orders = R::find('order');
-	$processes = R::find('process');
+	foreach ($orders as $key => $value) {
+		$record = end($value->ownRecordList);
+		if($record) {
+			$orders[$key]['desc'] = R::load('connect', $record->connect_id)->desc;
+		}
+	}
+	// $processes = R::find('process');
 	// $orderLog = R::findOne('orderlog', 'ORDER BY created_at DESC LIMIT 1');
-	$app->render('/normal/index.php', array('orders' => $orders,'processes' => $processes));
+	$app->render('/normal/index.php', array('orders' => $orders));
 })->name('normalIndex');
 
 $app->get('/normal/addOrder',$authCheckNoraml(), function() use ($app) {

@@ -1,2 +1,2 @@
-### Management for print facotory
+### Management for print facatory
 
