@@ -58,7 +58,7 @@
 
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                 <h1 class="page-header">工序列表</h1>
-                <a title="增加工序" href="./addGongxu"><span class="glyphicon glyphicon-plus"></span></a>
+                <!-- <a title="增加工序" href="./addGongxu"><span class="glyphicon glyphicon-plus"></span></a> -->
                 <!-- <h2 class="sub-header">Section title</h2> -->
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -82,7 +82,7 @@
                                         <?php echo $gongxu['desc'];?>
                                     </td>
                                     <td>
-                                        <a id="edit" href=<?php echo "./editGongxu/" . $gongxu['id']; ?> name="edit" class="btn btn-success">编辑</a>
+                                        <!-- <a id="edit" href=<?php echo "./editGongxu/" . $gongxu['id']; ?> name="edit" class="btn btn-success">编辑</a> -->
                                     <!-- <a id="deleteUser" onClick="if(confirm('您确定删除此条消息么?')) {window.location='./deleteGongxu/'+ <?php echo $gongxu['id']; ?>;} else {return false;}" name="删除" class="btn btn-danger">删除</a> -->
                                     </td>
                                 </tr>
